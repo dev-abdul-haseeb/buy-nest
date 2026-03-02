@@ -15,7 +15,9 @@ class _HomescreenState extends State<Homescreen> {
         title: Text('BuyNest'),
       ),
       body: Column(
+        children: [
 
+        ],
       ),
     );
   }

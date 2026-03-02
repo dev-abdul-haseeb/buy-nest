@@ -1,16 +1,27 @@
-# ecommerce_shopping_store
+# BUYNEST
+It is an ecommerce store built in Flutter using firebase and supabase.
+## Getting started
+1. Create a project in supabase.com
+2. Get the project URL and the anon key which will be used to interact with the project
+3. Go to firebase and initialize a firebase project
+4. Run the specific commands given.
+5. Generate SHA keys by running these commands: 1. cd android  2. gradlew signingReport 
+6. Put generated SHA keys in the required fields on store.
 
-A new Flutter project.
+## Packages used
+The following packages are used:
+1. firebase_core: ^4.4.0
+2. supabase_flutter: ^2.12.0 
+3. flutter_dotenv: ^6.0.0 
+4. cloud_firestore: ^6.1.2 
+5. firebase_auth: ^6.1.4 
+6. image_picker: ^1.2.1
 
-## Getting Started
+## Directory structure
 
-This project is a starting point for a Flutter application.
+lib
+|- View
+    |- Screens
+|- Model
+|- ViewModel
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -40,6 +40,11 @@ dependencies:
   cloud_firestore: ^6.1.2
   firebase_auth: ^6.1.4
   image_picker: ^1.2.1
+  google_fonts: ^8.0.2
+  bloc: ^9.2.0
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.8
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +63,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
+    - Assets/
     - .env
 
   # The following line ensures that the Material Icons font is

@@ -7,6 +7,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ViewModel/Bloc/auth_bloc/auth_bloc.dart';
+import 'ViewModel/Bloc/main_screen_bloc/main_screen_bloc.dart';
 import 'ViewModel/Bloc/theme_bloc/theme_bloc.dart';
 import 'config/color/colors.dart';
 import 'config/routes/route_names.dart';
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ThemeBloc()),
 
         BlocProvider(create: (context) => AuthBloc()),
+        BlocProvider(
+          create: (_) => MainNavBloc(),
+        )
 
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

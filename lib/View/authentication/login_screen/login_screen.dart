@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 listener: (context, state) {
                   final isSuccess = state.currentState == AuthStates.Authenticated;
                   final message =
-                  (state.message?.isNotEmpty ?? false) ? state.message! : (isSuccess ? 'Login successful!' : 'Login failed.');
+                  (state.message.isNotEmpty ?? false) ? state.message : (isSuccess ? 'Login successful!' : 'Login failed.');
                   showFlashbar(context, message, isSuccess);
                 },
                 child: Form(

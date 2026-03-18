@@ -2,15 +2,15 @@ part of 'obscure_text_bloc.dart';
 
 class ObscureTextState extends Equatable {
 
-  bool obscureText;
+  final bool obscureText;
 
-  ObscureTextState ({
+  const ObscureTextState ({
     this.obscureText = true,
   });
 
   ObscureTextState copyWith({bool? newBool}) {
     return ObscureTextState(
-      obscureText: newBool ?? this.obscureText,
+      obscureText: newBool ?? obscureText,
     );
   }
 

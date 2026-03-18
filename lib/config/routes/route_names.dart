@@ -10,4 +10,11 @@ class RouteNames{
 
   static const String homeScreen = 'HomeScreen';
 
+  static const String mainScreen = 'MainScreen';
+  static const String cartScreen = 'CartScreen';
+  static const String ordersScreen = 'OrdersScreen';
+  static const String profileScreen = 'ProfileScreen';
+
+
+
 }

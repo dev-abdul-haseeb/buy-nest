@@ -1,27 +1,26 @@
+import 'package:ecommerce_shopping_store/ViewModel/Bloc/buyer_main_screen_bloc/buyer_main_screen_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:ui';
-import '../../ViewModel/Bloc/main_screen_bloc/main_screen_bloc.dart';
-import '../cart_screen/cart_screen.dart';
-import '../home_screen/home_screen.dart';
-import '../orders_screen/orders_screen.dart';
-import '../profile_screen/profile_screen.dart';
+import 'package:ecommerce_shopping_store/View/views.dart';
 
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class BuyerMainScreen extends StatefulWidget {
+  const BuyerMainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<BuyerMainScreen> createState() => _BuyerMainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _BuyerMainScreenState extends State<BuyerMainScreen> {
+
+  late BuyerMainNavBloc _mainNavBloc;
 
   final List<Widget> _pages = const [
-    HomeScreen(),
-    CartScreen(),
-    OrdersScreen(),
-    ProfileScreen(),
+    BuyerHomeScreen(),
+    BuyerCartScreen(),
+    BuyerOrdersScreen(),
+    BuyerProfileScreen(),
   ];
 
   final List<NavItem> navItems = const [
@@ -32,23 +31,40 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _mainNavBloc = BuyerMainNavBloc();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _mainNavBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<MainNavBloc, MainNavState>(
-      builder: (context, state) {
-        return Scaffold(
-          extendBody: true,
-          body: IndexedStack(
-            index: state.selectedIndex,
-            children: _pages,
-          ),
-          bottomNavigationBar: _GlassNavBar(
-            currentIndex: state.selectedIndex,
-            items: navItems,
-            onTap: (i) => context.read<MainNavBloc>().add(MainNavTabChanged(i)),
-          ),
-        );
-      },
+    return BlocProvider(
+      create: (context) => _mainNavBloc,
+      child: BlocBuilder<BuyerMainNavBloc, BuyerMainNavState>(
+        builder: (context, state) {
+          return Scaffold(
+            extendBody: true,
+            body: IndexedStack(
+              index: state.selectedIndex,
+              children: _pages,
+            ),
+            bottomNavigationBar: _GlassNavBar(
+              currentIndex: state.selectedIndex,
+              items: navItems,
+              onTap: (i) => context.read<BuyerMainNavBloc>().add(BuyerMainNavTabChanged(i)),
+            ),
+          );
+        },
+      ),
     );
   }
 }

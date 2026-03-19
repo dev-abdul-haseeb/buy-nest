@@ -159,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   final message =
                   (state.message?.isNotEmpty ?? false) ? state.message! : (isSuccess ? 'Sign up successful!' : 'Sign up failed.');
                   showFlashbar(context, message, isSuccess);
-                  if(isSuccess) {
+                  if(isSuccess || state.message == 'Account created. Waiting for approval...') {
                     Navigator.pop(context);
                   }
                 },

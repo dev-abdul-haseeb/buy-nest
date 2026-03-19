@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class OrdersScreen extends StatelessWidget {
-  const OrdersScreen({super.key});
+class BuyerOrdersScreen extends StatelessWidget {
+  const BuyerOrdersScreen({super.key});
 
   final List<Map<String, dynamic>> _orders = const [
     {

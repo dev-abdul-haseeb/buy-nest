@@ -1,24 +1,24 @@
-part of 'main_screen_bloc.dart';
+part of 'buyer_main_screen_bloc.dart';
 
-abstract class MainNavEvent extends Equatable {
-  const MainNavEvent();
+abstract class BuyerMainNavEvent extends Equatable {
+  const BuyerMainNavEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class MainNavTabChanged extends MainNavEvent {
+class BuyerMainNavTabChanged extends BuyerMainNavEvent {
   final int index;
-  const MainNavTabChanged(this.index);
+  const BuyerMainNavTabChanged(this.index);
 
   @override
   List<Object> get props => [index];
 }
 
-class MainNavBadgeUpdated extends MainNavEvent {
+class BuyerMainNavBadgeUpdated extends BuyerMainNavEvent {
   final int cartItemCount;
   final int pendingOrderCount;
-  const MainNavBadgeUpdated({
+  const BuyerMainNavBadgeUpdated({
     this.cartItemCount = 0,
     this.pendingOrderCount = 0,
   });

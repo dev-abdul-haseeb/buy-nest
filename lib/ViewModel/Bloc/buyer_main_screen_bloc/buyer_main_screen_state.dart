@@ -1,22 +1,22 @@
-part of 'main_screen_bloc.dart';
+part of 'buyer_main_screen_bloc.dart';
 
-class MainNavState extends Equatable {
+class BuyerMainNavState extends Equatable {
   final int selectedIndex;
   final int cartItemCount;
   final int pendingOrderCount;
 
-  const MainNavState({
+  const BuyerMainNavState({
     this.selectedIndex = 0,
     this.cartItemCount = 0,
     this.pendingOrderCount = 0,
   });
 
-  MainNavState copyWith({
+  BuyerMainNavState copyWith({
     int? selectedIndex,
     int? cartItemCount,
     int? pendingOrderCount,
   }) {
-    return MainNavState(
+    return BuyerMainNavState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
       cartItemCount: cartItemCount ?? this.cartItemCount,
       pendingOrderCount: pendingOrderCount ?? this.pendingOrderCount,

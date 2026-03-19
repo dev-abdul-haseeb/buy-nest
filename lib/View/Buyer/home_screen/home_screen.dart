@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class BuyerHomeScreen extends StatefulWidget {
+  const BuyerHomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<BuyerHomeScreen> createState() => _BuyerHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   Timer? _autoSlideTimer;

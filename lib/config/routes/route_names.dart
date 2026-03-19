@@ -8,12 +8,11 @@ class RouteNames{
   static const String resetPasswordScreen = 'ResetPasswordScreen';
 
 
-  static const String homeScreen = 'HomeScreen';
-
-  static const String mainScreen = 'MainScreen';
-  static const String cartScreen = 'CartScreen';
-  static const String ordersScreen = 'OrdersScreen';
-  static const String profileScreen = 'ProfileScreen';
+  static const String buyerHomeScreen = 'HomeScreen';
+  static const String buyerMainScreen = 'MainScreen';
+  static const String buyerCartScreen = 'CartScreen';
+  static const String buyerOrdersScreen = 'OrdersScreen';
+  static const String buyerProfileScreen = 'ProfileScreen';
 
 
 

@@ -1,13 +1,12 @@
 import 'package:ecommerce_shopping_store/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ViewModel/Bloc/auth_bloc/auth_bloc.dart';
-import 'ViewModel/Bloc/main_screen_bloc/main_screen_bloc.dart';
 import 'ViewModel/Bloc/theme_bloc/theme_bloc.dart';
 import 'config/color/colors.dart';
 import 'config/routes/route_names.dart';
@@ -26,6 +25,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await FirebaseAuth.instance.authStateChanges().first;
+
+
   runApp(
     const MyApp(),
   );
@@ -41,9 +43,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ThemeBloc()),
 
         BlocProvider(create: (context) => AuthBloc()),
-        BlocProvider(
-          create: (_) => MainNavBloc(),
-        )
 
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

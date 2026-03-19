@@ -16,10 +16,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<AuthBloc>().add(AuthCheckRequested());
 
     Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) Navigator.pushReplacementNamed(context, RouteNames.authNavigator);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, RouteNames.authNavigator);
+      }
     });
 
   }

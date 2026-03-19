@@ -38,7 +38,10 @@ class AuthRepository {
 
   Future<(PersonModel?, AuthStates)> checkLogin() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = await FirebaseAuth.instance
+          .authStateChanges()
+          .first;
+
       if (user == null) {
         return (null, AuthStates.Unauthenticated);
       }
@@ -46,12 +49,12 @@ class AuthRepository {
         uid: user.uid,
         email: user.email!,
       );
+      print(user.uid);
       return (newModel, AuthStates.Authenticated);
     } catch (e) {
       return (null, AuthStates.Error);
     }
   }
-
   Future<void> logOutUser() async {
     await FirebaseAuth.instance.signOut();
   }

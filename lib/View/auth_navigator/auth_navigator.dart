@@ -1,4 +1,3 @@
-import 'package:ecommerce_shopping_store/View/main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce_shopping_store/View/views.dart';
@@ -17,7 +16,13 @@ class AuthNavigator extends StatelessWidget {
           current.currentState != AuthStates.Loading,
       builder: (context, state) {
         if (state.currentState == AuthStates.Authenticated) {
-          return MainScreen();
+          if(state.userModel.role == PersonRole.buyer) {
+            return BuyerMainScreen();
+          }
+          else if (state.userModel.role == PersonRole.seller) {
+            return SellerMainScreen();
+          }
+          return LoginScreen();
         } else {
           return LoginScreen();
         }

@@ -41,7 +41,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (newState == AuthStates.Authenticated) {
       final secondModel = await userRepository.getUserData(userModel!.uid);
+
       if (secondModel != null) {
+
+        if (secondModel.status != PersonStatus.accepted) {
+          await authRepository.logOutUser();
+          emit(state.copyWith(
+            newState: AuthStates.Unauthenticated,
+            newModel: PersonModel(),
+            newMessage: 'Could not login right now. Account status: ${secondModel.status.name}',
+          ));
+          return;
+        }
+
         final updatedModel = userModel.copyWith(
           newName: secondModel.name,
           newStatus: secondModel.status,
@@ -64,34 +76,60 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   }
 
-  void _signUpUser (AuthSignUp event, Emitter<AuthState> emit) async {
-
+  void _signUpUser(AuthSignUp event, Emitter<AuthState> emit) async {
     emit(state.copyWith(newState: AuthStates.Loading, newMessage: 'Signing up...'));
     final (newModel, message, newState) = await authRepository.signUpUser(state.userModel.email, state.userModel.password);
-    if(newModel == null) {
+
+    if (newModel == null) {
       emit(state.copyWith(newMessage: message, newState: newState));
-    }
-    else {
+    } else {
+      final status = state.userModel.role == PersonRole.seller
+          ? PersonStatus.waiting
+          : PersonStatus.accepted;
+
       final updatedModel = newModel.copyWith(
         newName: state.userModel.name,
         newRole: state.userModel.role,
         newCnic: state.userModel.cnic,
-        newStatus: state.userModel.status,
+        newStatus: status,
         newPhone: state.userModel.phone,
         newPassword: state.userModel.password,
       );
-      userRepository.createUserInDb(updatedModel);
+
+      await userRepository.createUserInDb(updatedModel);
+
+      if (status != PersonStatus.accepted) {
+        await authRepository.logOutUser();
+        emit(state.copyWith(
+          newState: AuthStates.Unauthenticated,
+          newModel: PersonModel(),
+          newMessage: 'Account created. Waiting for approval...',
+        ));
+        return;
+      }
+
       emit(state.copyWith(newModel: updatedModel, newMessage: message, newState: newState));
     }
   }
-
   void _loginUser(AuthLogin event, Emitter<AuthState> emit) async {
     emit(state.copyWith(newState: AuthStates.Loading, newMessage: 'Logging in...'));
     final (newModel, message, newState) = await authRepository.loginUser(state.userModel.email, state.userModel.password);
 
     if (newState == AuthStates.Authenticated) {
       final secondModel = await userRepository.getUserData(newModel!.uid);
+
       if (secondModel != null) {
+
+        if (secondModel.status != PersonStatus.accepted) {
+          await authRepository.logOutUser();
+          emit(state.copyWith(
+            newState: AuthStates.Unauthenticated,
+            newModel: PersonModel(),
+            newMessage: 'Could not login right now. Account status: ${secondModel.status.name}',
+          ));
+          return;
+        }
+
         final updatedModel = newModel.copyWith(
           newName: secondModel.name,
           newRole: secondModel.role,

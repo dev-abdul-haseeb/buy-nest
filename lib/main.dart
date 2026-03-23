@@ -1,3 +1,4 @@
+import 'package:ecommerce_shopping_store/ViewModel/Bloc/seller_main_screen_bloc/seller_main_screen_bloc.dart';
 import 'package:ecommerce_shopping_store/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +44,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ThemeBloc()),
 
         BlocProvider(create: (context) => AuthBloc()),
+
+        BlocProvider(create: (_)=>SellerMainNavBloc()),
 
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

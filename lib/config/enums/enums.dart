@@ -16,3 +16,16 @@ enum PersonStatus {
   rejected,
   waiting
 }
+
+enum OrderStatus {
+  complete,
+  incomplete,
+}
+
+enum ProductStatus {
+  packing,
+  packed,
+  shipped,
+  arrived,
+  received
+}

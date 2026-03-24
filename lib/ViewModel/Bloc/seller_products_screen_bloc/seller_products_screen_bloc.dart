@@ -148,7 +148,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       await Future.delayed(const Duration(seconds: 1));
 
       final updatedProducts = state.products.map((product) {
-        if (product.uid == event.product.uid) {
+        if (product.productId == event.product.productId) {
           return event.product;
         }
         return product;
@@ -187,12 +187,12 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       await Future.delayed(const Duration(seconds: 1));
 
       final productToDelete = state.products.firstWhere(
-            (product) => product.uid == event.productId,
+            (product) => product.productId == event.productId,
         orElse: () => const ProductModel(),
       );
 
       final updatedProducts = state.products
-          .where((product) => product.uid != event.productId)
+          .where((product) => product.productId != event.productId)
           .toList();
 
       final totalValue = updatedProducts.fold(0.0, (sum, product) => sum + (product.salePrice * product.quantity));
@@ -244,7 +244,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       await Future.delayed(const Duration(seconds: 1));
 
       final updatedProducts = state.products.map((product) {
-        if (product.uid == event.productId) {
+        if (product.productId == event.productId) {
           return product.copyWith(quantity: event.quantity);
         }
         return product;
@@ -406,7 +406,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         products.sort((a, b) => b.salePrice.compareTo(a.salePrice));
         break;
       case 'newest':
-        products.sort((a, b) => b.uid.compareTo(a.uid));
+        products.sort((a, b) => b.productId.compareTo(a.productId));
         break;
       case 'stock_low':
         products.sort((a, b) => a.quantity.compareTo(b.quantity));

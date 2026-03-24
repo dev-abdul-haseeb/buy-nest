@@ -191,7 +191,7 @@ class ProductsView extends StatelessWidget {
         trailing: IconButton(
           icon: const Icon(Icons.delete_outline, color: Colors.red),
           onPressed: () {
-            _showDeleteConfirmation(context, product.uid);
+            _showDeleteConfirmation(context, product.productId);
           },
         ),
       ),

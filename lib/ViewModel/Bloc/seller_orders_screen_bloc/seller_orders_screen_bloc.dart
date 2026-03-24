@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:ecommerce_shopping_store/Model/order/order.dart';
+import 'package:ecommerce_shopping_store/Model/order/order_model.dart';
 
 part 'seller_orders_screen_events.dart';
 part 'seller_orders_screen_state.dart';

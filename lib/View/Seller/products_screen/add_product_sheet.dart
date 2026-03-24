@@ -225,7 +225,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
           : 20;
 
       final product = ProductModel(
-        uid: DateTime.now().millisecondsSinceEpoch.toString(), // Temporary UID
+        productId: DateTime.now().millisecondsSinceEpoch.toString(), // Temporary UID
         sellerId: 'current_seller_id', // Replace with actual seller ID
         name: _nameController.text,
         description: _descriptionController.text,
@@ -233,7 +233,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
         salePrice: salePrice,
         costPrice: costPrice,
         quantity: quantity,
-        imageUrl: _selectedImageUrl,
+        imageUrl: _selectedImageUrl!,
       );
 
       // Call the callback with product, image file, and image URL

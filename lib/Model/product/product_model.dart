@@ -1,27 +1,28 @@
 import 'package:equatable/equatable.dart';
 
 class ProductModel extends Equatable {
-  final String uid;
+  final String productId;
   final String sellerId;
   final String name;
-  final String description;
   final String category;
+  final String description;
   final double salePrice;
   final double costPrice;
   final int quantity;
-  final String? imageUrl; // Add this line
+  final String imageUrl;
 
   const ProductModel({
-    this.uid = '',
+    this.productId = '',
     this.sellerId = '',
     this.name = '',
     this.description = '',
     this.category = '',
-    this.salePrice = 12,
-    this.costPrice = 9,
-    this.quantity = 20,
-    this.imageUrl, // Add this line
+    this.salePrice = 0,
+    this.costPrice = 0,
+    this.quantity = 0,
+    this.imageUrl = '',
   });
+
   ProductModel copyWith({
     String? uid,
     String? sellerId,
@@ -34,7 +35,7 @@ class ProductModel extends Equatable {
     String? imageUrl,
   }) {
     return ProductModel(
-      uid: uid ?? this.uid,
+      productId: uid ?? this.productId,
       sellerId: sellerId ?? this.sellerId,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -47,7 +48,7 @@ class ProductModel extends Equatable {
   }
   @override
   List<Object?> get props => [
-    uid,
+    productId,
     sellerId,
     name,
     description,
@@ -55,6 +56,6 @@ class ProductModel extends Equatable {
     salePrice,
     costPrice,
     quantity,
-    imageUrl, // Add this line
+    imageUrl,
   ];
 }

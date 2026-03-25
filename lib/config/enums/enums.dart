@@ -20,6 +20,7 @@ enum PersonStatus {
 enum OrderStatus {
   complete,
   incomplete,
+  cancelled
 }
 
 enum ProductStatus {

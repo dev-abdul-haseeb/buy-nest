@@ -4,10 +4,10 @@ import '../../config/enums/enums.dart';
 
 class OrderModel extends Equatable{
 
-  String orderId;
-  String buyerId;
-  DateTime date;
-  OrderStatus status;
+  final String orderId;
+  final String buyerId;
+  final DateTime date;
+  final OrderStatus status;
 
   OrderModel({
     this.orderId = '',

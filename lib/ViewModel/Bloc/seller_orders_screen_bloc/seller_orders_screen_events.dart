@@ -74,23 +74,3 @@ class FilterOrdersByStatus extends SellerOrdersScreenEvent {
   @override
   List<Object?> get props => [status];
 }
-
-// Search Orders
-class SearchSellerOrders extends SellerOrdersScreenEvent {
-  final String query;
-
-  const SearchSellerOrders({required this.query});
-
-  @override
-  List<Object?> get props => [query];
-}
-
-// Refresh Orders
-class RefreshSellerOrders extends SellerOrdersScreenEvent {
-  final String sellerId;
-
-  const RefreshSellerOrders({required this.sellerId});
-
-  @override
-  List<Object?> get props => [sellerId];
-}

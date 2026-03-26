@@ -16,6 +16,18 @@ class AuthLogin extends AuthEvent {}
 
 class AuthSignUp extends AuthEvent {}
 
+class UpdateProfile extends AuthEvent {
+  String name;
+  String phone;
+  String cnic;
+
+  UpdateProfile ({
+    required this.name,
+    required this.phone,
+    required this.cnic,
+  });
+}
+
 class NameChanged extends AuthEvent {
   String name;
   NameChanged({required this.name});

@@ -17,6 +17,14 @@ class UserRepository {
     });
   }
 
+  Future<void> updateUserInDb (PersonModel person) async {
+    await _firestore.collection('person').doc(person.uid).update({
+      'cnic': person.cnic,
+      'phone': person.phone,
+      'name': person.name
+    });
+  }
+
   Future<PersonModel?> getUserData(String uid) async {
     final doc = await _firestore.collection('person').doc(uid).get();
 

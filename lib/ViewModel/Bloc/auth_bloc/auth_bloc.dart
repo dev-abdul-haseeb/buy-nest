@@ -21,6 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignUp>(_signUpUser);
     on<AuthLogin>(_loginUser);
     on<ResetPassword>(_resetPassword);
+    on<UpdateProfile>(_updateProfile);
 
     on<NameChanged>(_nameChanged);
     on<PhoneChanged>(_phoneChanged);
@@ -144,7 +145,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     emit(state.copyWith(newModel: newModel, newMessage: message, newState: newState));
   }
-
   void _resetPassword(ResetPassword event, Emitter<AuthState> emit) async {
     emit(state.copyWith(newState: AuthStates.Loading, newMessage: ''));
     try {
@@ -160,6 +160,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ));
     }
     add(ClearAuthFields());
+  }
+  void _updateProfile(UpdateProfile event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(newMessage: 'Loading...', newState: AuthStates.Loading));
+    emit(state.copyWith(newModel: state.userModel.copyWith(newCnic: event.cnic,newPhone: event.phone,newName: event.name)));
+    await userRepository.updateUserInDb(state.userModel);
+    emit(state.copyWith(newMessage: 'Update complete!', newState: AuthStates.Authenticated));
   }
 
   void _nameChanged(NameChanged event, Emitter<AuthState> emit) {
@@ -180,7 +186,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _passwordChanged(PasswordChanged event, Emitter<AuthState> emit) {
     emit(state.copyWith(newModel: state.userModel.copyWith(newPassword: event.password)));
   }
-
   void _clearFields(ClearAuthFields event, Emitter<AuthState> emit) {
     emit(state.copyWith(newModel: PersonModel(), newMessage: ''));
   }

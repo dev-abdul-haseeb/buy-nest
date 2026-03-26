@@ -1,18 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-import '../../config/enums/enums.dart';
-
 class AddressModel extends Equatable{
 
-  String addressId;
-  String personId;
-  String orderId;
-  String country;
-  String city;
-  String street;
-  String house;
+  final String addressId;
+  final String personId;
+  final String orderId;
+  final String country;
+  final String city;
+  final String street;
+  final String house;
 
-  AddressModel({
+  const AddressModel({
     this.addressId = '',
     this.personId = '',
     this.orderId = '',

@@ -1,23 +1,8 @@
 part of 'seller_products_screen_bloc.dart';
 
-enum ProductsStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-  empty,
-  adding,
-  added,
-  updating,
-  updated,
-  deleting,
-  deleted,
-  searching,
-  filtering,
-}
 
 class ProductsState extends Equatable {
-  final ProductsStatus status;
+  final ProductScreenStatus status;
   final List<ProductModel> products;
   final List<ProductModel> filteredProducts;
   final String? errorMessage;
@@ -30,8 +15,9 @@ class ProductsState extends Equatable {
   final double totalValue;
   final Map<String, int> categoryCounts;
 
+
   const ProductsState({
-    this.status = ProductsStatus.initial,
+    this.status = ProductScreenStatus.initial,
     this.products = const [],
     this.filteredProducts = const [],
     this.errorMessage,
@@ -46,13 +32,13 @@ class ProductsState extends Equatable {
   });
 
   // Helper getters
-  bool get isLoading => status == ProductsStatus.loading;
-  bool get isAdding => status == ProductsStatus.adding;
-  bool get isUpdating => status == ProductsStatus.updating;
-  bool get isDeleting => status == ProductsStatus.deleting;
-  bool get hasError => status == ProductsStatus.error;
-  bool get isEmpty => status == ProductsStatus.empty;
-  bool get isLoaded => status == ProductsStatus.loaded;
+  bool get isLoading => status == ProductScreenStatus.loading;
+  bool get isAdding => status == ProductScreenStatus.adding;
+  bool get isUpdating => status == ProductScreenStatus.updating;
+  bool get isDeleting => status == ProductScreenStatus.deleting;
+  bool get hasError => status == ProductScreenStatus.error;
+  bool get isEmpty => status == ProductScreenStatus.empty;
+  bool get isLoaded => status == ProductScreenStatus.loaded;
 
   // Get displayed products (filtered or all)
   List<ProductModel> get displayProducts =>
@@ -89,7 +75,7 @@ class ProductsState extends Equatable {
   }
 
   ProductsState copyWith({
-    ProductsStatus? status,
+    ProductScreenStatus? status,
     List<ProductModel>? products,
     List<ProductModel>? filteredProducts,
     String? errorMessage,

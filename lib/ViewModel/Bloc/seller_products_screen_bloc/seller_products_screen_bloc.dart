@@ -5,11 +5,18 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_shopping_store/Model/product/product_model.dart';
 
+import '../../../config/enums/enums.dart';
+import '../../../repository/products_repository/seller_product_repository.dart';
+
 part 'seller_products_screen_events.dart';
 part 'seller_products_screen_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
-  ProductsBloc() : super(const ProductsState()) {
+  final SellerProductRepository _repository;
+
+  ProductsBloc({required SellerProductRepository repository})
+      : _repository = repository,
+        super(const ProductsState()) {
     on<LoadProducts>(_onLoadProducts);
     on<AddProduct>(_onAddProduct);
     on<UpdateProduct>(_onUpdateProduct);
@@ -28,17 +35,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       LoadProducts event,
       Emitter<ProductsState> emit,
       ) async {
-    emit(state.copyWith(status: ProductsStatus.loading));
+    emit(state.copyWith(status: ProductScreenStatus.loading));
 
     try {
-      // TODO: Replace with actual API call
-      // final products = await productRepository.getSellerProducts(event.sellerId);
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
-
-      // Mock data for demonstration
-      final List<ProductModel> products = [];
+      final List<ProductModel> products = await _repository.fetchSellerProducts();
 
       // Calculate category counts
       final Map<String, int> categoryCounts = {};
@@ -50,7 +50,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
       if (products.isEmpty) {
         emit(state.copyWith(
-          status: ProductsStatus.empty,
+          status: ProductScreenStatus.empty,
           products: [],
           filteredProducts: [],
           totalProducts: 0,
@@ -59,7 +59,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         ));
       } else {
         emit(state.copyWith(
-          status: ProductsStatus.loaded,
+          status: ProductScreenStatus.loaded,
           products: products,
           filteredProducts: [],
           totalProducts: products.length,
@@ -69,7 +69,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       }
     } catch (error) {
       emit(state.copyWith(
-        status: ProductsStatus.error,
+        status: ProductScreenStatus.error,
         errorMessage: 'Failed to load products: ${error.toString()}',
       ));
     }
@@ -80,33 +80,30 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       AddProduct event,
       Emitter<ProductsState> emit,
       ) async {
-    emit(state.copyWith(status: ProductsStatus.adding));
+    emit(state.copyWith(status: ProductScreenStatus.adding));
 
     try {
-      // TODO: Upload image if exists
-      // String? uploadedImageUrl;
-      // if (event.imageFile != null) {
-      //   uploadedImageUrl = await uploadImage(event.imageFile!);
-      // } else if (event.imageUrl != null) {
-      //   uploadedImageUrl = event.imageUrl;
-      // }
+      // Add product to repository
+      final ProductModel newProduct = await _repository.addProduct(
+        name: event.product.name,
+        description: event.product.description,
+        category: event.product.category,
+        salePrice: event.product.salePrice,
+        costPrice: event.product.costPrice,
+        quantity: event.product.quantity,
+        imageFiles: event.imageFiles,
+        imageUrls: event.imageUrls,
+      );
 
-      // TODO: Save product to database
-      // final productWithImage = event.product.copyWith(imageUrl: uploadedImageUrl);
-      // await productRepository.addProduct(productWithImage);
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
-
-      final updatedProducts = List<ProductModel>.from(state.products)..add(event.product);
+      final updatedProducts = List<ProductModel>.from(state.products)..add(newProduct);
       final totalValue = updatedProducts.fold(0.0, (sum, product) => sum + (product.salePrice * product.quantity));
 
       // Update category counts
       final Map<String, int> categoryCounts = Map.from(state.categoryCounts);
-      categoryCounts[event.product.category] = (categoryCounts[event.product.category] ?? 0) + 1;
+      categoryCounts[newProduct.category] = (categoryCounts[newProduct.category] ?? 0) + 1;
 
       emit(state.copyWith(
-        status: ProductsStatus.added,
+        status: ProductScreenStatus.added,
         products: updatedProducts,
         totalProducts: updatedProducts.length,
         totalValue: totalValue,
@@ -115,10 +112,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
       // Reset status after a delay
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(state.copyWith(status: ProductsStatus.loaded));
+      emit(state.copyWith(status: ProductScreenStatus.loaded));
     } catch (error) {
       emit(state.copyWith(
-        status: ProductsStatus.error,
+        status: ProductScreenStatus.error,
         errorMessage: 'Failed to add product: ${error.toString()}',
       ));
     }
@@ -129,27 +126,26 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       UpdateProduct event,
       Emitter<ProductsState> emit,
       ) async {
-    emit(state.copyWith(status: ProductsStatus.updating));
+    emit(state.copyWith(status: ProductScreenStatus.updating));
 
     try {
-      // TODO: Upload new image if exists
-      // String? uploadedImageUrl;
-      // if (event.imageFile != null) {
-      //   uploadedImageUrl = await uploadImage(event.imageFile!);
-      // } else if (event.imageUrl != null) {
-      //   uploadedImageUrl = event.imageUrl;
-      // }
-
-      // TODO: Update product in database
-      // final updatedProduct = event.product.copyWith(imageUrl: uploadedImageUrl);
-      // await productRepository.updateProduct(updatedProduct);
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
+      // Update product in repository
+      final ProductModel updatedProduct = await _repository.updateProduct(
+        productId: event.product.productId,
+        name: event.product.name,
+        description: event.product.description,
+        category: event.product.category,
+        salePrice: event.product.salePrice,
+        costPrice: event.product.costPrice,
+        quantity: event.product.quantity,
+        newImageFiles: event.newImageFiles,
+        newImageUrls: event.newImageUrls,
+        imagesToRemove: event.imagesToRemove,
+      );
 
       final updatedProducts = state.products.map((product) {
-        if (product.productId == event.product.productId) {
-          return event.product;
+        if (product.productId == updatedProduct.productId) {
+          return updatedProduct;
         }
         return product;
       }).toList();
@@ -157,16 +153,16 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       final totalValue = updatedProducts.fold(0.0, (sum, product) => sum + (product.salePrice * product.quantity));
 
       emit(state.copyWith(
-        status: ProductsStatus.updated,
+        status: ProductScreenStatus.updated,
         products: updatedProducts,
         totalValue: totalValue,
       ));
 
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(state.copyWith(status: ProductsStatus.loaded));
+      emit(state.copyWith(status: ProductScreenStatus.loaded));
     } catch (error) {
       emit(state.copyWith(
-        status: ProductsStatus.error,
+        status: ProductScreenStatus.error,
         errorMessage: 'Failed to update product: ${error.toString()}',
       ));
     }
@@ -177,53 +173,55 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       DeleteProduct event,
       Emitter<ProductsState> emit,
       ) async {
-    emit(state.copyWith(status: ProductsStatus.deleting));
+    emit(state.copyWith(status: ProductScreenStatus.deleting));
 
     try {
-      // TODO: Delete product from database
-      // await productRepository.deleteProduct(event.productId);
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
-
+      // Get product before deletion for category count update
       final productToDelete = state.products.firstWhere(
             (product) => product.productId == event.productId,
         orElse: () => const ProductModel(),
       );
 
-      final updatedProducts = state.products
-          .where((product) => product.productId != event.productId)
-          .toList();
+      // Delete product from repository
+      final bool deleted = await _repository.deleteProduct(event.productId);
 
-      final totalValue = updatedProducts.fold(0.0, (sum, product) => sum + (product.salePrice * product.quantity));
+      if (deleted) {
+        final updatedProducts = state.products
+            .where((product) => product.productId != event.productId)
+            .toList();
 
-      // Update category counts
-      final Map<String, int> categoryCounts = Map.from(state.categoryCounts);
-      if (productToDelete.category.isNotEmpty) {
-        categoryCounts[productToDelete.category] =
-            (categoryCounts[productToDelete.category] ?? 1) - 1;
-        if (categoryCounts[productToDelete.category] == 0) {
-          categoryCounts.remove(productToDelete.category);
+        final totalValue = updatedProducts.fold(0.0, (sum, product) => sum + (product.salePrice * product.quantity));
+
+        // Update category counts
+        final Map<String, int> categoryCounts = Map.from(state.categoryCounts);
+        if (productToDelete.category.isNotEmpty) {
+          categoryCounts[productToDelete.category] =
+              (categoryCounts[productToDelete.category] ?? 1) - 1;
+          if (categoryCounts[productToDelete.category] == 0) {
+            categoryCounts.remove(productToDelete.category);
+          }
         }
-      }
 
-      emit(state.copyWith(
-        status: ProductsStatus.deleted,
-        products: updatedProducts,
-        totalProducts: updatedProducts.length,
-        totalValue: totalValue,
-        categoryCounts: categoryCounts,
-      ));
+        emit(state.copyWith(
+          status: ProductScreenStatus.deleted,
+          products: updatedProducts,
+          totalProducts: updatedProducts.length,
+          totalValue: totalValue,
+          categoryCounts: categoryCounts,
+        ));
 
-      if (updatedProducts.isEmpty) {
-        emit(state.copyWith(status: ProductsStatus.empty));
+        if (updatedProducts.isEmpty) {
+          emit(state.copyWith(status: ProductScreenStatus.empty));
+        } else {
+          await Future.delayed(const Duration(milliseconds: 500));
+          emit(state.copyWith(status: ProductScreenStatus.loaded));
+        }
       } else {
-        await Future.delayed(const Duration(milliseconds: 500));
-        emit(state.copyWith(status: ProductsStatus.loaded));
+        throw Exception('Failed to delete product');
       }
     } catch (error) {
       emit(state.copyWith(
-        status: ProductsStatus.error,
+        status: ProductScreenStatus.error,
         errorMessage: 'Failed to delete product: ${error.toString()}',
       ));
     }
@@ -234,70 +232,71 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       UpdateProductStock event,
       Emitter<ProductsState> emit,
       ) async {
-    emit(state.copyWith(status: ProductsStatus.updating));
+    emit(state.copyWith(status: ProductScreenStatus.updating));
 
     try {
-      // TODO: Update stock in database
-      // await productRepository.updateStock(event.productId, event.quantity);
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
+      // Update stock in repository
+      final ProductModel updatedProduct = await _repository.updateProductStock(
+        productId: event.productId,
+        newQuantity: event.quantity,
+      );
 
       final updatedProducts = state.products.map((product) {
         if (product.productId == event.productId) {
-          return product.copyWith(quantity: event.quantity);
+          return updatedProduct;
         }
         return product;
       }).toList();
 
-      // Fixed: Properly typed fold operation
       final totalValue = updatedProducts.fold(0.0, (double sum, ProductModel product) =>
-      sum + (product.salePrice * product.quantity)
-      );
+      sum + (product.salePrice * product.quantity));
 
       emit(state.copyWith(
-        status: ProductsStatus.updated,
+        status: ProductScreenStatus.updated,
         products: updatedProducts,
         totalValue: totalValue,
       ));
 
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(state.copyWith(status: ProductsStatus.loaded));
+      emit(state.copyWith(status: ProductScreenStatus.loaded));
     } catch (error) {
       emit(state.copyWith(
-        status: ProductsStatus.error,
+        status: ProductScreenStatus.error,
         errorMessage: 'Failed to update stock: ${error.toString()}',
       ));
     }
   }
 
   // Search Products
-  void _onSearchProducts(
+  Future<void> _onSearchProducts(
       SearchProducts event,
       Emitter<ProductsState> emit,
-      ) {
+      ) async {
     emit(state.copyWith(
-      status: ProductsStatus.searching,
+      status: ProductScreenStatus.searching,
       searchQuery: event.query,
     ));
 
-    if (event.query.isEmpty) {
-      // Clear search
-      emit(state.copyWith(
-        filteredProducts: [],
-        status: ProductsStatus.loaded,
-      ));
-    } else {
-      // Search in products
-      final searchResults = state.products.where((product) {
-        return product.name.toLowerCase().contains(event.query.toLowerCase()) ||
-            product.description.toLowerCase().contains(event.query.toLowerCase()) ||
-            product.category.toLowerCase().contains(event.query.toLowerCase());
-      }).toList();
+    try {
+      if (event.query.isEmpty) {
+        // Clear search
+        emit(state.copyWith(
+          filteredProducts: [],
+          status: ProductScreenStatus.loaded,
+        ));
+      } else {
+        // Search products using repository
+        final searchResults = await _repository.searchProducts(event.query);
 
+        emit(state.copyWith(
+          filteredProducts: searchResults,
+          status: searchResults.isEmpty ? ProductScreenStatus.empty : ProductScreenStatus.loaded,
+        ));
+      }
+    } catch (error) {
       emit(state.copyWith(
-        filteredProducts: searchResults,
-        status: searchResults.isEmpty ? ProductsStatus.empty : ProductsStatus.loaded,
+        status: ProductScreenStatus.error,
+        errorMessage: 'Failed to search products: ${error.toString()}',
       ));
     }
   }
@@ -308,7 +307,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       Emitter<ProductsState> emit,
       ) {
     emit(state.copyWith(
-      status: ProductsStatus.filtering,
+      status: ProductScreenStatus.filtering,
       selectedCategory: event.category,
     ));
 
@@ -333,7 +332,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
     emit(state.copyWith(
       filteredProducts: filtered,
-      status: filtered.isEmpty ? ProductsStatus.empty : ProductsStatus.loaded,
+      status: filtered.isEmpty ? ProductScreenStatus.empty : ProductScreenStatus.loaded,
     ));
   }
 
@@ -343,7 +342,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       Emitter<ProductsState> emit,
       ) {
     emit(state.copyWith(
-      status: ProductsStatus.filtering,
+      status: ProductScreenStatus.filtering,
       minPrice: event.minPrice,
       maxPrice: event.maxPrice,
     ));
@@ -368,7 +367,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
     emit(state.copyWith(
       filteredProducts: filtered,
-      status: filtered.isEmpty ? ProductsStatus.empty : ProductsStatus.loaded,
+      status: filtered.isEmpty ? ProductScreenStatus.empty : ProductScreenStatus.loaded,
     ));
   }
 
@@ -378,7 +377,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       Emitter<ProductsState> emit,
       ) {
     emit(state.copyWith(
-      status: ProductsStatus.filtering,
+      status: ProductScreenStatus.filtering,
       sortBy: event.sortBy,
     ));
 
@@ -390,34 +389,35 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
     emit(state.copyWith(
       filteredProducts: sortedProducts,
-      status: ProductsStatus.loaded,
+      status: ProductScreenStatus.loaded,
     ));
   }
 
   List<ProductModel> _applySorting(List<ProductModel> products, String sortBy) {
+    final sortedList = List<ProductModel>.from(products);
     switch (sortBy) {
       case 'name':
-        products.sort((a, b) => a.name.compareTo(b.name));
+        sortedList.sort((a, b) => a.name.compareTo(b.name));
         break;
       case 'price_low':
-        products.sort((a, b) => a.salePrice.compareTo(b.salePrice));
+        sortedList.sort((a, b) => a.salePrice.compareTo(b.salePrice));
         break;
       case 'price_high':
-        products.sort((a, b) => b.salePrice.compareTo(a.salePrice));
+        sortedList.sort((a, b) => b.salePrice.compareTo(a.salePrice));
         break;
       case 'newest':
-        products.sort((a, b) => b.productId.compareTo(a.productId));
+        sortedList.sort((a, b) => b.productId.compareTo(a.productId));
         break;
       case 'stock_low':
-        products.sort((a, b) => a.quantity.compareTo(b.quantity));
+        sortedList.sort((a, b) => a.quantity.compareTo(b.quantity));
         break;
       case 'stock_high':
-        products.sort((a, b) => b.quantity.compareTo(a.quantity));
+        sortedList.sort((a, b) => b.quantity.compareTo(a.quantity));
         break;
       default:
         break;
     }
-    return products;
+    return sortedList;
   }
 
   // Refresh Products
@@ -425,7 +425,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       RefreshProducts event,
       Emitter<ProductsState> emit,
       ) async {
-    add(LoadProducts(sellerId: event.sellerId));
+    add(LoadProducts());
   }
 
   // Clear Filters
@@ -440,7 +440,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       minPrice: null,
       maxPrice: null,
       sortBy: null,
-      status: ProductsStatus.loaded,
+      status: ProductScreenStatus.loaded,
     ));
   }
 }

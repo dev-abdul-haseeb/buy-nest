@@ -30,3 +30,29 @@ enum ProductStatus {
   arrived,
   received
 }
+
+
+enum ProductScreenStatus {
+  initial,
+  loading,
+  loaded,
+  error,
+  empty,
+  adding,
+  added,
+  updating,
+  updated,
+  deleting,
+  deleted,
+  searching,
+  filtering,
+}
+
+enum ProductCategory{
+  electronics,
+  food,
+  dairy,
+  homeAccessories,
+  kitchenAccessories,
+  utensils,
+}

@@ -17,7 +17,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
   final List<Widget> _screens = [
     const ProductsScreen(),
     const OrdersScreen(),
-    const ProfileScreen(),
+    const SellerProfileScreen(),
   ];
 
   @override

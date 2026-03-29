@@ -9,44 +9,47 @@ abstract class ProductsEvent extends Equatable {
 
 // Load Products Event
 class LoadProducts extends ProductsEvent {
-  final String sellerId;
+  //final String sellerId;
 
-  const LoadProducts({required this.sellerId});
+  const LoadProducts();
 
   @override
-  List<Object?> get props => [sellerId];
+  List<Object?> get props => [];
 }
 
 // Add Product Event
 class AddProduct extends ProductsEvent {
   final ProductModel product;
-  final File? imageFile;
-  final String? imageUrl;
+  final List<File>? imageFiles;
+  final List<String>? imageUrls;
 
   const AddProduct({
     required this.product,
-    this.imageFile,
-    this.imageUrl,
+    required this.imageFiles,
+    required this.imageUrls,
   });
 
   @override
-  List<Object?> get props => [product, imageFile, imageUrl];
+  List<Object?> get props => [product, imageFiles, imageUrls];
 }
 
 // Update Product Event
 class UpdateProduct extends ProductsEvent {
   final ProductModel product;
-  final File? imageFile;
-  final String? imageUrl;
+  final List<File>? newImageFiles;
+  final List<String>? newImageUrls;
+  final List<String>? imagesToRemove;
+
 
   const UpdateProduct({
     required this.product,
-    this.imageFile,
-    this.imageUrl,
+    this.newImageFiles,
+    this.newImageUrls,
+    this.imagesToRemove,
   });
 
   @override
-  List<Object?> get props => [product, imageFile, imageUrl];
+  List<Object?> get props => [product, newImageFiles, newImageUrls, imagesToRemove];
 }
 
 // Delete Product Event
@@ -119,12 +122,12 @@ class SortProducts extends ProductsEvent {
 
 // Refresh Products
 class RefreshProducts extends ProductsEvent {
-  final String sellerId;
+ // final String sellerId;
 
-  const RefreshProducts({required this.sellerId});
+  const RefreshProducts();
 
   @override
-  List<Object?> get props => [sellerId];
+  List<Object?> get props => [];
 }
 
 // Clear Filters

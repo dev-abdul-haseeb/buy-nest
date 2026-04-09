@@ -114,6 +114,7 @@ class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
                   'Logout',
                   color: themeState.theme[appColors.primaryColor]!,
                   bgcolor: themeState.theme[appColors.errorColor]!,
+                  onPressed: () => context.read<AuthBloc>().add(AuthLogOut()) ,
                 ),
 
                 const SizedBox(height: 80),

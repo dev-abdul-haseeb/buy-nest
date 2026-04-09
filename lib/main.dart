@@ -65,7 +65,6 @@ class MyApp extends StatelessWidget {
 
         BlocProvider(create: (_)=>SellerMainNavBloc()),
 
-        BlocProvider(create: (_)=>BuyerAddressBloc()),
         BlocProvider(create: (_)=>getIt<ProductsBloc>())
 
       ],

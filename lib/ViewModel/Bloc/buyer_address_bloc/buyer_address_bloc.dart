@@ -24,7 +24,7 @@ class BuyerAddressBloc extends Bloc<BuyerAddressEvent, BuyerAddressState> {
     if(buyerId == '') {
       buyerId = FirebaseAuth.instance.currentUser!.uid;
     }
-    AddressModel newModel = await _addressRepository.getBuyerAddressById(event.buyerId);
+    AddressModel newModel = await _addressRepository.getBuyerAddressById(buyerId);
     emit(state.copyWith(newAddressModel: newModel));
   }
 

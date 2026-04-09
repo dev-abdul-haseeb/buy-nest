@@ -1,5 +1,5 @@
 import 'package:ecommerce_shopping_store/Model/product/product_model.dart';
-import 'package:ecommerce_shopping_store/repository/products_repository/products_repositroy.dart';
+import 'package:ecommerce_shopping_store/repository/products_repository/products_repository.dart';
 
 class ProductRepositorySupabase extends ProductsRepository{
 

@@ -120,34 +120,6 @@ class SellerProductRepository {
       throw Exception('Failed to upload images: $e');
     }
   }
-  /// Test function to check if a bucket exists in Supabase
-  // Future<bool> testBucketExists(String bucketName) async {
-  //   try {
-  //     final supabase = Supabase.instance.client;
-  //     final buckets = await supabase.storage.listBuckets();
-  //
-  //     final exists = buckets.any((bucket) => bucket.name == bucketName);
-  //
-  //     if (exists) {
-  //       print('✅ Bucket "$bucketName" exists!');
-  //       print('   Bucket details:');
-  //       final bucket = buckets.firstWhere((b) => b.name == bucketName);
-  //       print('   - ID: ${bucket.id}');
-  //       print('   - Name: ${bucket.name}');
-  //       print('   - Owner: ${bucket.owner}');
-  //       print('   - Public: ${bucket.public}');
-  //       print('   - Created at: ${bucket.createdAt}');
-  //     } else {
-  //       print('❌ Bucket "$bucketName" does NOT exist!');
-  //       print('   Available buckets: ${buckets.map((b) => b.name).join(', ')}');
-  //     }
-  //
-  //     return exists;
-  //   } catch (e) {
-  //     print('❌ Error checking bucket: $e');
-  //     return false;
-  //   }
-  // }
 
   /// Delete product images from Supabase Storage
   Future<void> deleteProductImages(List<String> imageUrls) async {

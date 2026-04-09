@@ -52,7 +52,7 @@ enum ProductCategory{
   electronics,
   food,
   dairy,
-  homeAccessories,
-  kitchenAccessories,
+  HomeAccessories,
+  KitchenAccessories,
   utensils,
 }

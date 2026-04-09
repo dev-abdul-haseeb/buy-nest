@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import '../../config/enums/enums.dart';
 
 class SaleProductModel extends Equatable{
-
   String saleProductId;
   String orderId;
   String productId;
